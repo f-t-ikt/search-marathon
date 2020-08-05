@@ -87,13 +87,14 @@ def message(event_data):
         lock.release()
 
 def search(text):
-    count = "-1"
-    try:
-        response = service.cse().list(q=text, cx=CUSTOM_SEARCH_ENGINE_KEY, lr="lang_ja").execute()
-        count = response["searchInformation"]["totalResults"]
-    except HttpError as e:
-        print(e)
-    return int(count)
+    return len(text)
+    # count = "-1"
+    # try:
+        # response = service.cse().list(q=text, cx=CUSTOM_SEARCH_ENGINE_KEY, lr="lang_ja").execute()
+        # count = response["searchInformation"]["totalResults"]
+    # except HttpError as e:
+        # print(e)
+    # return int(count)
 
 def game():
     global goal, min_score, channel
