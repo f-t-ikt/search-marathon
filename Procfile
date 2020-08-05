@@ -1,1 +1,1 @@
-bot: gunicorn main:app
+bot: gunicorn main:app --log-file=-
