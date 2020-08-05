@@ -129,4 +129,7 @@ def main():
     slack_events_adapter.start(port=os.environ["PORT"])
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:
+        print(e)
