@@ -56,6 +56,7 @@ Google 検索で指定されたヒット数を目指すゲームです.
 
 @slack_events_adapter.on("message")
 def message(event_data):
+    print("called")
     if "bot_id" in event_data["event"]:
         return
     global channel
