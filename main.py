@@ -59,6 +59,7 @@ def message(event_data):
     print("called")
     if "bot_id" in event_data["event"]:
         return
+    print("not a bot")
     global channel
     if event_data["event"]["channel"] != channel:
         return
@@ -70,7 +71,9 @@ def message(event_data):
         lock.acquire()
         if not on_game:
             return
+        print("on game")
         result = search(text)
+        print("get result")
         if result == -1:
             client.chat_postMessage(channel=channel, text="検索できませんでした.")
             return
