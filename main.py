@@ -68,7 +68,9 @@ def message(event_data):
     try:
         global post_count, on_game, min_score, winner, winning_score, winning_word
         global lock
+        print("unlocked?")
         lock.acquire()
+        print("lock!")
         if not on_game:
             return
         print("on game")
