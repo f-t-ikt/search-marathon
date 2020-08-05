@@ -2,14 +2,17 @@ import os
 import random
 import time
 import threading
+from flask import Flask
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from slack import WebClient
 from slack.errors import SlackApiError
 from slackeventsapi import SlackEventAdapter
 
+app = Flask(__name__)
+
 client = WebClient(token=os.environ["SLACK_API_TOKEN"])
-slack_events_adapter = SlackEventAdapter(signing_secret=os.environ["SLACK_SIGNING_SECRET"], endpoint="/slack/events")
+slack_events_adapter = SlackEventAdapter(signing_secret=os.environ["SLACK_SIGNING_SECRET"], endpoint="/slack/events", server=app)
 service = build("customsearch", "v1", developerKey=os.environ["GOOGLE_API_KEY"])
 
 CUSTOM_SEARCH_ENGINE_KEY = os.environ["CUSTOM_SEARCH_ENGINE_KEY"]
@@ -125,11 +128,11 @@ def error(e):
     print(f"Got an error: {e.response['error']}")
 
 # Start the server on port 3000
-def main():
-    slack_events_adapter.start(port=os.environ["PORT"])
+# def main():
+    # slack_events_adapter.start(port=os.environ["PORT"])
+@app.route("/")
+def hello():
+    return "Hello there!"
 
 if __name__ == "__main__":
-    try:
-        main()
-    except Exception as e:
-        print(e)
+    app.run(port=os.environ["PORT"])
