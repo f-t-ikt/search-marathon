@@ -65,6 +65,7 @@ def message(event_data):
         return
     user = event_data["event"]["user"]
     text = event_data["event"]["text"]
+    print("get data")
     try:
         global post_count, on_game, min_score, winner, winning_score, winning_word
         global lock
