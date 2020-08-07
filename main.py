@@ -21,6 +21,7 @@ TIME_LIMIT = 5*60
 POST_LIMIT = 10
 STEP = 100
 HIT_LIMIT = 50000
+MY_USER_ID = "<@U0184L7TBS6>"
 
 on_game = False
 post_count = 0
@@ -65,6 +66,8 @@ def message(event_data):
         return
     user = data["user"]
     text = data["text"]
+    if MY_USER_ID in text:
+        return
     try:
         global post_count, on_game, min_score, winner, winning_score, winning_word
         global lock
