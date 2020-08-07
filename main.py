@@ -56,27 +56,20 @@ Google 検索で指定されたヒット数を目指すゲームです.
 
 @slack_events_adapter.on("message")
 def message(event_data):
-    print("called")
     if "bot_id" in event_data["event"]:
         return
-    print("not a bot")
     global channel
     if event_data["event"]["channel"] != channel:
         return
     user = event_data["event"]["user"]
     text = event_data["event"]["text"]
-    print("get data")
     try:
         global post_count, on_game, min_score, winner, winning_score, winning_word
         global lock
-        print("unlocked?")
         lock.acquire()
-        print("lock!")
         if not on_game:
             return
-        print("on game")
         result = search(text)
-        print("get result")
         if result == -1:
             client.chat_postMessage(channel=channel, text="検索できませんでした.")
             return
@@ -95,14 +88,14 @@ def message(event_data):
         lock.release()
 
 def search(text):
-    return len(text)
-    # count = "-1"
-    # try:
-        # response = service.cse().list(q=text, cx=CUSTOM_SEARCH_ENGINE_KEY, lr="lang_ja").execute()
-        # count = response["searchInformation"]["totalResults"]
-    # except HttpError as e:
-        # print(e)
-    # return int(count)
+    # return len(text)
+    count = "-1"
+    try:
+        response = service.cse().list(q=text, cx=CUSTOM_SEARCH_ENGINE_KEY, lr="lang_ja").execute()
+        count = response["searchInformation"]["totalResults"]
+    except HttpError as e:
+        print(e)
+    return int(count)
 
 def game():
     global goal, min_score, channel
