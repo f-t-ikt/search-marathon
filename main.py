@@ -35,9 +35,10 @@ lock = threading.Lock()
 @slack_events_adapter.on("app_mention")
 def app_mention(event_data):
     global on_game, channel
-    text = event_data["event"]["text"]
+    data = event_data["event"]
+    text = data["text"]
     if "start" in text and not on_game:
-        channel = event_data["event"]["channel"]
+        channel = data["channel"]
         game_thread = threading.Thread(target=game)
         game_thread.start()
     elif "help" in text:
@@ -48,21 +49,22 @@ Google 検索で指定されたヒット数を目指すゲームです.
 目標件数により近い検索ワードを探しましょう.
 ただし, 普通に検索するよりも結果がガバガバなので, 若干運要素も含まれます.
 (おことわり: Google カスタム検索 API の無料枠のみを利用するため, 1日にそんなに多くの回数を遊ぶことが出来ません. 「基本無料」を謳うスマホゲーみたいなものだと思って諦めてください.)
-                  """
+"""
         try:
-            client.chat_postMessage(channel=event_data["event"]["channel"], text=message)
+            client.chat_postMessage(channel=data["channel"], text=message)
         except SlackApiError as e:
             error(e)
 
 @slack_events_adapter.on("message")
 def message(event_data):
-    if "bot_id" in event_data["event"]:
+    data = event_data["event"]
+    if "subtype" in data or "bot_id" in data:
         return
     global channel
-    if event_data["event"]["channel"] != channel:
+    if data["channel"] != channel:
         return
-    user = event_data["event"]["user"]
-    text = event_data["event"]["text"]
+    user = data["user"]
+    text = data["text"]
     try:
         global post_count, on_game, min_score, winner, winning_score, winning_word
         global lock
