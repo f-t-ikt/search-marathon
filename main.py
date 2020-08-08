@@ -84,7 +84,7 @@ def message(event_data):
             winner = "<@" + user + ">"
             winning_score = result
             winning_word = text
-        client.chat_postMessage(channel=channel, text=f"「{text}」のヒット数は {result} 件でした！\n残り{POST_LIMIT-count-1}回です！")
+        client.chat_postMessage(channel=channel, text=f"「{text}」のヒット数は {result} 件でした！\n残り{POST_LIMIT-post_count-1}回です！")
         post_count += 1
         print("count:",post_count)
     except SlackApiError as e:
