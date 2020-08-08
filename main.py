@@ -43,7 +43,7 @@ def app_mention(event_data):
         game_thread = threading.Thread(target=game)
         game_thread.start()
     elif "help" in text:
-        message = """
+        message = """\
 Google 検索で指定されたヒット数を目指すゲームです.
 この bot 宛に "start" とメンションするとゲームが始まります.
 10回検索するか, 5分経過するとゲームオーバーです.
