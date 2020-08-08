@@ -21,7 +21,7 @@ TIME_LIMIT = 5*60
 POST_LIMIT = 10
 STEP = 100
 HIT_LIMIT = 50000
-MY_USER_ID = "<@U0184L7TBS6>"
+MY_USER_ID = "<@U018HFVCNQ2>"
 
 on_game = False
 post_count = 0
