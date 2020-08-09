@@ -16,7 +16,7 @@ slack_events_adapter = SlackEventAdapter(signing_secret=os.environ["SLACK_SIGNIN
 service = build("customsearch", "v1", developerKey=os.environ["GOOGLE_API_KEY"])
 
 CUSTOM_SEARCH_ENGINE_KEY = os.environ["CUSTOM_SEARCH_ENGINE_KEY"]
-DEFAULT_CHANNEL = "test-search-marathon"
+DEFAULT_CHANNEL = "sandbox"
 TIME_LIMIT = 5*60
 POST_LIMIT = 10
 STEP = 100
