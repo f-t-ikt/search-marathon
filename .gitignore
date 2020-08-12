@@ -8,3 +8,6 @@
 pyvenv.cfg
 .venv
 pip-selfcheck.json
+ngrok.log
+debugenv
+productenv
