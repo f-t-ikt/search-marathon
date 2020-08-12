@@ -68,30 +68,31 @@ def message(event_data):
     text = data["text"]
     if MY_USER_ID in text:
         return
-    try:
-        global post_count, on_game, min_score, winner, winning_score, winning_word
-        global lock
-        lock.acquire()
+    global post_count, on_game, min_score, winner, winning_score, winning_word
+    global lock
+    with lock:
         if not on_game:
             return
         result = search(text)
         if result == -1:
-            client.chat_postMessage(channel=channel, text="検索できませんでした.")
-            return
+            try:
+                client.chat_postMessage(channel=channel, text="検索できませんでした.")
+                return
+            except SlackApiError as e:
+                error(e)
         score = abs(result - goal)
         if min_score > score:
             min_score = score
             winner = "<@" + user + ">"
             winning_score = result
             winning_word = text
-        client.chat_postMessage(channel=channel, text=f"「{text}」のヒット数は {result} 件でした！\n残り{POST_LIMIT-post_count-1}回です！")
+        try:
+            client.chat_postMessage(channel=channel, text=f"「{text}」のヒット数は {result} 件でした！\n残り{POST_LIMIT-post_count-1}回です！")
+        except SlackApiError as e:
+            error(e)    
         post_count += 1
         print("count:",post_count)
-    except SlackApiError as e:
-        error(e)
-    finally:
-        lock.release()
-
+    
 def search(text):
     # return len(text)
     count = "-1"
