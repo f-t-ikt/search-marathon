@@ -11,3 +11,4 @@ pip-selfcheck.json
 ngrok.log
 debugenv
 productenv
+__pychache__
