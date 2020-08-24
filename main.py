@@ -73,8 +73,8 @@ def message(event_data):
     with lock:
         if not on_game:
             return
-        result = search(text)
-        if result == -1:
+        result, title, link = search(text)
+        if result is None:
             try:
                 client.chat_postMessage(channel=channel, text="検索できませんでした.")
                 return
@@ -87,7 +87,7 @@ def message(event_data):
             winning_score = result
             winning_word = text
         try:
-            client.chat_postMessage(channel=channel, text=f"「{text}」のヒット数は {result} 件でした！\n残り{POST_LIMIT-post_count-1}回です！")
+            client.chat_postMessage(channel=channel, text=f"「{text}」のヒット数は {result} 件でした！\n検索結果の例: {title} {link}\n残り{POST_LIMIT-post_count-1}回です！")
         except SlackApiError as e:
             error(e)    
         post_count += 1
@@ -95,13 +95,15 @@ def message(event_data):
     
 def search(text):
     # return len(text)
-    count = "-1"
     try:
         response = service.cse().list(q=text, cx=CUSTOM_SEARCH_ENGINE_KEY, lr="lang_ja").execute()
-        count = response["searchInformation"]["totalResults"]
+        count = int(response["searchInformation"]["totalResults"])
+        title = response["items"][0]["title"]
+        link = response["items"][0]["link"]
     except HttpError as e:
         print(e)
-    return int(count)
+        count, title, link = None, None, None
+    return count, title, link
 
 def game():
     global goal, min_score, channel
