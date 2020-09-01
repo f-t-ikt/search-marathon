@@ -59,15 +59,10 @@ Google 検索で指定されたヒット数を目指すゲームです.
 @slack_events_adapter.on("message")
 def message(event_data):
     data = event_data["event"]
-    if "subtype" in data or "bot_id" in data:
-        return
-    global channel
-    if data["channel"] != channel:
+    if not is_valid_message(data):
         return
     user = data["user"]
     text = data["text"]
-    if MY_USER_ID in text:
-        return
     global post_count, on_game, min_score, winner, winning_score, winning_word
     global lock
     with lock:
@@ -92,7 +87,19 @@ def message(event_data):
             error(e)    
         post_count += 1
         print("count:",post_count)
+
+def is_valid_message(data):
+    if "subtype" in data or "bot_id" in data:
+        return False
+    global channel
+    if data["channel"] != channel:
+        return False
+    text = data["text"]
+    if MY_USER_ID in text:
+        return False
     
+    return True
+
 def search(text):
     # return len(text)
     try:
