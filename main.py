@@ -76,13 +76,16 @@ def message(event_data):
         if result is None:
             send_message(channel, "検索できませんでした.")
             return
-        score = abs(result - goal)
+        score = abs(result - goal) if result > 0 else 1<<60
         if min_score > score:
             min_score = score
             winner = "<@" + user + ">"
             winning_score = result
             winning_word = text
-        send_message(channel, f"「{text}」のヒット数は {result} 件でした！\n検索結果の例: {title} {link}\n残り{POST_LIMIT-post_count-1}回です！")   
+        if result > 0:
+            send_message(channel, f"「{text}」のヒット数は {result} 件でした！\n検索結果の例: {title} {link}\n残り{POST_LIMIT-post_count-1}回です！")   
+        else:
+            send_message(channel, f"「{text}」のヒット数は 0 件でした！残念！\n残り{POST_LIMIT-post_count-1}回です！")
         post_count += 1
         print("count:",post_count)
 
