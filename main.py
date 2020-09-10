@@ -35,7 +35,6 @@ lock = threading.Lock()
 
 @slack_events_adapter.on("app_mention")
 def app_mention(event_data):
-    global on_game
     data = event_data["event"]
     text = data["text"]
     channel = data["channel"]
