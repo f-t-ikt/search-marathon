@@ -127,7 +127,7 @@ def game():
     while post_count < POST_LIMIT and time.time() - start_time < TIME_LIMIT:
         None
     on_game = False
-    global winner, winning_score, winning_word
+    global winner
     try:
         lock.acquire()
         if min_score < INF:
