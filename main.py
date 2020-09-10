@@ -110,7 +110,7 @@ def search(text):
     return count, title, link
 
 def game():
-    global goal, min_score, channel
+    global goal, min_score
     global lock
     goal = random.randrange(1, HIT_LIMIT // STEP) * STEP
     min_score = 1<<60
