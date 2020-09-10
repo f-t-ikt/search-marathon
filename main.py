@@ -89,7 +89,6 @@ def message(event_data):
 def is_valid_message(data):
     if "subtype" in data or "bot_id" in data:
         return False
-    global channel
     if data["channel"] != channel:
         return False
     text = data["text"]
