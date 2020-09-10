@@ -147,6 +147,12 @@ def game():
         winner = ""
         lock.release()
 
+def send_message(channel, text):
+    try:
+        client.chat_postMessage(channel=channel, text=text)
+    except SlackApiError as e:
+        error(e)
+
 def error(e):
     assert e.response["ok"] is False
     assert e.response["error"]
