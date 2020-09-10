@@ -35,15 +35,16 @@ lock = threading.Lock()
 
 @slack_events_adapter.on("app_mention")
 def app_mention(event_data):
-    global on_game, channel
+    global on_game
     data = event_data["event"]
     text = data["text"]
+    channel = data["channel"]
     if "start" in text and not on_game:
         channel = data["channel"]
         game_thread = threading.Thread(target=game)
         game_thread.start()
     elif "help" in text:
-        show_help(data["channel"])
+        show_help(channel)
 
 def show_help(channel):
     message = """\
