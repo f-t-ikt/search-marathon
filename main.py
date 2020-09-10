@@ -22,6 +22,7 @@ POST_LIMIT = 10
 STEP = 100
 HIT_LIMIT = 50000
 MY_USER_ID = os.environ["SLACK_APP_USER_ID"]
+INF = 1<<60
 
 on_game = False
 post_count = 0
@@ -76,7 +77,7 @@ def message(event_data):
         if result is None:
             send_message(channel, "検索できませんでした.")
             return
-        score = abs(result - goal) if result > 0 else 1<<60
+        score = abs(result - goal) if result > 0 else INF
         if min_score > score:
             min_score = score
             winner = "<@" + user + ">"
@@ -117,7 +118,7 @@ def game():
     global goal, min_score
     global lock
     goal = random.randrange(1, HIT_LIMIT // STEP) * STEP
-    min_score = 1<<60
+    min_score = INF
     send_message(channel, f"試合開始です！\n目標件数は {goal} 件です！")
     global on_game
     on_game = True
@@ -129,7 +130,10 @@ def game():
     global winner, winning_score, winning_word
     try:
         lock.acquire()
-        client.chat_postMessage(channel=channel, text=f"試合終了です！\n{winner} さんの *「{winning_word}」* (ヒット数: {winning_score}) が勝利です！")
+        if min_score < INF:
+            client.chat_postMessage(channel=channel, text=f"試合終了です！\n{winner} さんの *「{winning_word}」* (ヒット数: {winning_score}) が勝利です！")
+        else:
+            client.chat_postMessage(channel=channel, text="試合終了です！勝者なし！")
     except SlackApiError as e:
         error(e)
     finally:
