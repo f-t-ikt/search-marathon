@@ -99,14 +99,15 @@ def is_valid_message(data):
 
 def search(text):
     # return len(text)
+    count, title, link = None, None, None
     try:
         response = service.cse().list(q=text, cx=CUSTOM_SEARCH_ENGINE_KEY, lr="lang_ja").execute()
         count = int(response["searchInformation"]["totalResults"])
-        title = response["items"][0]["title"]
-        link = response["items"][0]["link"]
+        if count > 0:
+            title = response["items"][0]["title"]
+            link = response["items"][0]["link"]
     except HttpError as e:
         print(e)
-        count, title, link = None, None, None
     return count, title, link
 
 def game():
