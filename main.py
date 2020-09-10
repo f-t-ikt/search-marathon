@@ -39,8 +39,11 @@ def app_mention(event_data):
     data = event_data["event"]
     text = data["text"]
     channel = data["channel"]
-    if "start" in text and not on_game:
-        start_game(channel)
+    if "start" in text:
+        if not on_game:
+            start_game(channel)
+        else:
+            send_message(channel, "試合中です.")
     elif "help" in text:
         show_help(channel)
 
