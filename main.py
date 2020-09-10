@@ -40,11 +40,15 @@ def app_mention(event_data):
     text = data["text"]
     channel = data["channel"]
     if "start" in text and not on_game:
-        channel = data["channel"]
-        game_thread = threading.Thread(target=game)
-        game_thread.start()
+        start_game(channel)
     elif "help" in text:
         show_help(channel)
+
+def start_game(chan):
+    global channel
+    channel = chan
+    game_thread = threading.Thread(target=game)
+    game_thread.start()
 
 def show_help(channel):
     message = """\
