@@ -46,6 +46,8 @@ def app_mention(event_data):
             send_message(channel, "試合中です.")
     elif "help" in text:
         show_help(channel)
+    else:
+        send_message(channel, "https://www.tbs.co.jp/anime/machikado/")
 
 def start_game(chan):
     global channel
