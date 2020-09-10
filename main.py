@@ -67,7 +67,7 @@ def message(event_data):
         return
     user = data["user"]
     text = data["text"]
-    global post_count, on_game, min_score, winner, winning_score, winning_word
+    global post_count, min_score, winner, winning_score, winning_word
     global lock
     with lock:
         if not on_game:
