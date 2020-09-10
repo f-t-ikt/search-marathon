@@ -51,7 +51,7 @@ def start_game(chan):
     game_thread.start()
 
 def show_help(channel):
-    message = """\
+    text = """\
 Google 検索で指定されたヒット数を目指すゲームです.
 この bot 宛に "start" とメンションするとゲームが始まります.
 10回検索するか, 5分経過するとゲームオーバーです.
@@ -59,10 +59,7 @@ Google 検索で指定されたヒット数を目指すゲームです.
 ただし, 普通に検索するよりも結果がガバガバなので, 若干運要素も含まれます.
 (おことわり: Google カスタム検索 API の無料枠のみを利用するため, 1日にそんなに多くの回数を遊ぶことが出来ません. 「基本無料」を謳うスマホゲーみたいなものだと思って諦めてください.)
 """
-    try:
-        client.chat_postMessage(channel=channel, text=message)
-    except SlackApiError as e:
-        error(e)
+    send_message(channel, text)
 
 @slack_events_adapter.on("message")
 def message(event_data):
@@ -78,21 +75,15 @@ def message(event_data):
             return
         result, title, link = search(text)
         if result is None:
-            try:
-                client.chat_postMessage(channel=channel, text="検索できませんでした.")
-                return
-            except SlackApiError as e:
-                error(e)
+            send_message(channel, "検索できませんでした.")
+            return
         score = abs(result - goal)
         if min_score > score:
             min_score = score
             winner = "<@" + user + ">"
             winning_score = result
             winning_word = text
-        try:
-            client.chat_postMessage(channel=channel, text=f"「{text}」のヒット数は {result} 件でした！\n検索結果の例: {title} {link}\n残り{POST_LIMIT-post_count-1}回です！")
-        except SlackApiError as e:
-            error(e)    
+        send_message(channel, f"「{text}」のヒット数は {result} 件でした！\n検索結果の例: {title} {link}\n残り{POST_LIMIT-post_count-1}回です！")   
         post_count += 1
         print("count:",post_count)
 
@@ -123,12 +114,9 @@ def search(text):
 def game():
     global goal, min_score, channel
     global lock
-    try:
-        goal = random.randrange(1, HIT_LIMIT // STEP) * STEP
-        min_score = 1<<60
-        client.chat_postMessage(channel=channel, text=f"試合開始です！\n目標件数は {goal} 件です！")
-    except SlackApiError as e:
-        error(e)
+    goal = random.randrange(1, HIT_LIMIT // STEP) * STEP
+    min_score = 1<<60
+    send_message(channel, f"試合開始です！\n目標件数は {goal} 件です！")
     global on_game
     on_game = True
     start_time = time.time()
