@@ -43,7 +43,10 @@ def app_mention(event_data):
         game_thread = threading.Thread(target=game)
         game_thread.start()
     elif "help" in text:
-        message = """\
+        show_help(data["channel"])
+
+def show_help(channel):
+    message = """\
 Google 検索で指定されたヒット数を目指すゲームです.
 この bot 宛に "start" とメンションするとゲームが始まります.
 10回検索するか, 5分経過するとゲームオーバーです.
@@ -51,10 +54,10 @@ Google 検索で指定されたヒット数を目指すゲームです.
 ただし, 普通に検索するよりも結果がガバガバなので, 若干運要素も含まれます.
 (おことわり: Google カスタム検索 API の無料枠のみを利用するため, 1日にそんなに多くの回数を遊ぶことが出来ません. 「基本無料」を謳うスマホゲーみたいなものだと思って諦めてください.)
 """
-        try:
-            client.chat_postMessage(channel=data["channel"], text=message)
-        except SlackApiError as e:
-            error(e)
+    try:
+        client.chat_postMessage(channel=channel, text=message)
+    except SlackApiError as e:
+        error(e)
 
 @slack_events_adapter.on("message")
 def message(event_data):
