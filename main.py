@@ -124,7 +124,7 @@ def game():
     global goal, min_score, channel
     global lock
     try:
-        goal = random.randrange(1, HIT_LIMIT / STEP) * STEP
+        goal = random.randrange(1, HIT_LIMIT // STEP) * STEP
         min_score = 1<<60
         client.chat_postMessage(channel=channel, text=f"試合開始です！\n目標件数は {goal} 件です！")
     except SlackApiError as e:
